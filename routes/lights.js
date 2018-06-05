@@ -1,6 +1,5 @@
 const lightsRouter = require('express').Router()
 
-
 module.exports = (server) => {
   const lightsController = require('../controllers/lightsController')(server)
 
