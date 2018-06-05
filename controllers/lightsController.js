@@ -1,5 +1,6 @@
 const lights = {}
 const socket = require('../socket/server')
+let timeout = new Date()
 
 const lightsController = (server) => {
   return controller = {
@@ -10,8 +11,11 @@ const lightsController = (server) => {
       })
     },
     edit: (request, response, next) => {
-      lights[request.params.id].client.emit('status.update')
-      console.log(`[LIGHTLIGHTERSERVER][POST][MAIN-LIGHT][TOGGLED]`)
+      if((timeout - new Date()) < -1000) {
+        lights[request.params.id].client.emit('status.update')
+        console.log(`[LIGHTLIGHTERSERVER][POST][MAIN-LIGHT][TOGGLED]`)
+        timeout = new Date()
+      }
 
       response.redirect('/')
       next()
