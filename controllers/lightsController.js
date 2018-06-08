@@ -11,7 +11,7 @@ const lightsController = (server) => {
       })
     },
     edit: (request, response, next) => {
-      if((timeout - new Date()) < -1000) {
+      if((timeout - new Date()) < -2000) {
         lights[request.params.id].client.emit('status.update')
         console.log(`[LIGHTLIGHTERSERVER][POST][MAIN-LIGHT][TOGGLED]`)
         timeout = new Date()
