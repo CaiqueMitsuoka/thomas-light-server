@@ -13,20 +13,25 @@ const SockerServer = {
     SockerServer.server.on('connection',  (client) => {
       console.log('[THOMAS-LIGHT-SERVER][WS][CONNECTION]')
 
-      client.on('register', (data) => {
-        client.lightId = crypto.createHash('md5').update(data).digest("hex")
-        console.log(`[THOMAS-LIGHT-SERVER][WS][REGISTER] Data: ${data}, Id: ${client.lightId}`)
-
-        SockerServer.lights[client.lightId] = { client: client }
-
-        client.emit('registered', client.lightId)
-      })
-
-      client.on('disconnect', () => {
-        console.log('[THOMAS-LIGHT-SERVER][WS][DISCONNECT]')
-        delete SockerServer.lights[client.lightId]
-      })
+      client.on('register', SockerServer.handleRegister(client))
+        .on('disconnect', SockerServer.handleDisconnect(client))
     })
+  },
+  handleRegister: (client) => {
+    return (data) => {
+      client.lightId = crypto.createHash('md5').update(data).digest("hex")
+      console.log(`[THOMAS-LIGHT-SERVER][WS][REGISTER] Data: ${data}, Id: ${client.lightId}`)
+
+      SockerServer.lights[client.lightId] = { client: client }
+
+      client.emit('registered', client.lightId)
+    }
+  },
+  handleDisconnect: (client) => {
+    return () => {
+      console.log('[THOMAS-LIGHT-SERVER][WS][DISCONNECT]')
+      delete SockerServer.lights[client.lightId]
+    }
   }
 }
 
