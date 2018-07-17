@@ -2,7 +2,37 @@
 <html lang="en">
 <head>
   <title>Thomas Light Server</title>
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+  <!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous"> -->
+  <style rel="stylesheet">
+    *{
+      list-style: none;
+      box-sizing: border-box;
+      font-family: Arial;
+      text-align: center;
+      text-decoration: none;
+      color: #333;
+    }
+    h1{
+      margin-top: 50px;
+      font-size: 3rem;
+      color: #999;
+      text-transform: uppercase;
+    }
+    input{
+      padding: 0;
+      margin: 0;
+      cursor: pointer;
+      background: url('https://i.stack.imgur.com/b983w.jpg') no-repeat 0 0;
+      background-size: contain;
+      width: 300px;
+      height: 500px;
+      text-indent: -9999px;
+      border: 0;
+    }
+    a{
+      font-size: 30px;
+    }
+  </style>
 </head>
   <body>
     <main class="container">
@@ -11,17 +41,22 @@
       </div>
 
       <div>
-        <p class="display-4">Lights:</p>
-        <ul>
-          <% lights.forEach(function(light) {  %>
-            <li class="list-group">
+          <h1><% lights.forEach(function(light) {  %></h1>
               <form class="" action="/<%= light %>" method="post">
-                <input class="text-center list-group-item list-group-item-action list-group-item-primary" type="submit" value="<%= light %>">
+                <buttom class="lampada text-center list-group-item list-group-item-action list-group-item-primary"  type="submit" value="<%= light %>">
+                  <input class="text-center list-group-item list-group-item-action list-group-item-primary" onclick="myFunction()" type="submit" value="<%= light %>">
+                </buttom>
               </form>
-            </li>
           <% }) %>
-        </ul>
       </div>
+      <p><a href="https://twitter.com/CaiqueMitsuoka">@CaiqueMitsuoka</a></p>
     </main>
+    <script>
+      function myFunction() {
+        var element = document.querySelector('.lampada');
+        element.classList.toggle("onn");
+        localStorage.setItem('light': 'onn');
+      }
+    </script>
   </body>
 </html>
