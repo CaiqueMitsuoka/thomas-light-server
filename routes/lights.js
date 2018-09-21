@@ -5,6 +5,7 @@ module.exports = (server) => {
 
   lightsRouter.post('/:id', lightsController.edit)
   lightsRouter.get('/', lightsController.show)
+  lightsRouter.get('/guitar', lightsController.guitar)
 
   return lightsRouter
 }

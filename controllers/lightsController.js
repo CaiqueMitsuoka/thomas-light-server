@@ -19,6 +19,9 @@ const lightsController = (server) => {
 
       response.redirect('/')
       next()
+    },
+    guitar: (request, response, next) => {
+      response.render('lights/guitar', {})
     }
   }
 }

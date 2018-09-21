@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <style>
+      * {
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div data-panel>
+      👀
+    </div>
+  </body>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    var colors = {
+      green: '#5dbe57',
+      red: '#db4f3c',
+      yellow: '#fffd62',
+      blue: '#3f5ae9',
+      orange: '#ff9b62'
+    }
+    var socket = io()
+    var changeColor = function(colorName) {
+      return () => {
+        document.querySelector('[data-panel]').style.backgroundColor = colors[colorName]
+      }
+    }
+    socket.emit('panel.connection')
+    socket.on('guitar.green', changeColor('green'))
+    socket.on('guitar.red', changeColor('red'))
+    socket.on('guitar.yellow', changeColor('yellow'))
+    socket.on('guitar.blue', changeColor('blue'))
+    socket.on('guitar.orange', changeColor('orange'))
+  </script>
+</html>

@@ -1,20 +1,22 @@
 const io = require('socket.io')
 const crypto = require('crypto')
 
-const SockerServer = {
+const SocketServer = {
   start: (server, lights) => {
-    SockerServer.lights = lights
-    SockerServer.server = io(server)
-    SockerServer.setupClient()
+    SocketServer.lights = lights
+    SocketServer.server = io(server)
+    SocketServer.setupClient()
 
-    return SockerServer.server
+    return SocketServer.server
   },
   setupClient: () => {
-    SockerServer.server.on('connection',  (client) => {
+    SocketServer.server.on('connection',  (client) => {
       console.log('[THOMAS-LIGHT-SERVER][WS][CONNECTION]')
 
-      client.on('register', SockerServer.handleRegister(client))
-        .on('disconnect', SockerServer.handleDisconnect(client))
+      client.on('register', SocketServer.handleRegister(client))
+        .on('disconnect', SocketServer.handleDisconnect(client))
+        .on('panel.connection', SocketServer.handlePanelConnect(client))
+        .on('guitar.press', SocketServer.handleGuitarPress(client))
     })
   },
   handleRegister: (client) => {
@@ -22,7 +24,7 @@ const SockerServer = {
       client.lightId = crypto.createHash('md5').update(data).digest("hex")
       console.log(`[THOMAS-LIGHT-SERVER][WS][REGISTER] Data: ${data}, Id: ${client.lightId}`)
 
-      SockerServer.lights[client.lightId] = { client: client }
+      SocketServer.lights[client.lightId] = { client: client }
 
       client.emit('registered', client.lightId)
     }
@@ -30,9 +32,21 @@ const SockerServer = {
   handleDisconnect: (client) => {
     return () => {
       console.log('[THOMAS-LIGHT-SERVER][WS][DISCONNECT]')
-      delete SockerServer.lights[client.lightId]
+      delete SocketServer.lights[client.lightId]
+    }
+  },
+  handlePanelConnect: (client) => {
+    return () => {
+      client.join('panels')
+      console.log('[THOMAS-LIGHT-SERVER][WS][PANEL][JOIN]')
+    }
+  },
+  handleGuitarPress: (client) => {
+    return (button) => {
+      console.log('[THOMAS-LIGHT-SERVER][WS][GUITAR-PRESS]' + button)
+      SocketServer.server.to('panels').emit(`guitar.${button}`)
     }
   }
 }
 
-module.exports = SockerServer
+module.exports = SocketServer
